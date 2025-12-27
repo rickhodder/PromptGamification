@@ -46,6 +46,16 @@ class Prompt(BaseModel):
     persona_used: Optional[str] = None
     review_history: List[ReviewHistoryEntry] = Field(default_factory=list)
     
+    # Raw AI responses (before processing)
+    raw_questions: Optional[List[str]] = None
+    raw_refinements: Optional[List[str]] = None
+    raw_feedback: Optional[str] = None
+    
+    # Processed AI responses (after cleaning/validation)
+    processed_questions: Optional[List[str]] = None
+    processed_refinements: Optional[List[str]] = None
+    processed_feedback: Optional[str] = None
+    
     class Config:
         json_encoders = {
             datetime: lambda v: v.isoformat()

@@ -118,6 +118,15 @@ Respond in JSON format."""
             processed = ResponseProcessor.process_review_response(response)
             processed["persona"] = self.name
             processed["ai_used"] = True
+            
+            # Store both raw and processed feedback in prompt
+            prompt.raw_questions = processed.get("raw_questions")
+            prompt.raw_refinements = processed.get("raw_refinements")
+            prompt.raw_feedback = processed.get("raw_feedback")
+            prompt.processed_questions = processed.get("processed_questions")
+            prompt.processed_refinements = processed.get("processed_refinements")
+            prompt.processed_feedback = processed.get("processed_feedback")
+            
             return processed
             
         except Exception as e:

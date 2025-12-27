@@ -27,24 +27,38 @@ class ResponseProcessor:
             response: Raw response from AI service
             
         Returns:
-            Processed and validated response
+            Processed and validated response with both raw and processed versions
         """
+        # Store raw versions before processing
+        raw_questions = response.get("questions", [])
+        raw_refinements = response.get("refinements", [])
+        raw_feedback = response.get("feedback", "")
+        
+        # Process the data
+        processed_questions = ResponseProcessor._process_questions(raw_questions)
+        processed_refinements = ResponseProcessor._process_refinements(raw_refinements)
+        processed_feedback = ResponseProcessor._process_feedback(raw_feedback)
+        
         processed = {
             "suggested_prompt": ResponseProcessor._process_suggested_prompt(
                 response.get("suggested_prompt", "")
             ),
-            "questions": ResponseProcessor._process_questions(
-                response.get("questions", [])
-            ),
-            "refinements": ResponseProcessor._process_refinements(
-                response.get("refinements", [])
-            ),
+            "questions": processed_questions,
+            "refinements": processed_refinements,
             "ratings": ResponseProcessor._process_ratings(
                 response.get("ratings", {})
             ),
-            "feedback": ResponseProcessor._process_feedback(
-                response.get("feedback", "")
-            )
+            "feedback": processed_feedback,
+            
+            # Add raw versions
+            "raw_questions": raw_questions if isinstance(raw_questions, list) else [],
+            "raw_refinements": raw_refinements if isinstance(raw_refinements, list) else [],
+            "raw_feedback": raw_feedback if isinstance(raw_feedback, str) else "",
+            
+            # Add processed versions (for clarity)
+            "processed_questions": processed_questions,
+            "processed_refinements": processed_refinements,
+            "processed_feedback": processed_feedback
         }
         
         # Preserve metadata

@@ -37,7 +37,26 @@ class JSONStorage:
         """Read JSON file with error handling"""
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
-                return json.load(f)
+                data = json.load(f)
+                
+                # Add backward compatibility for prompts with missing raw/processed fields
+                if file_path == self.prompts_file:
+                    for item in data:
+                        # Add new fields if they don't exist
+                        if 'raw_questions' not in item:
+                            item['raw_questions'] = None
+                        if 'raw_refinements' not in item:
+                            item['raw_refinements'] = None
+                        if 'raw_feedback' not in item:
+                            item['raw_feedback'] = None
+                        if 'processed_questions' not in item:
+                            item['processed_questions'] = None
+                        if 'processed_refinements' not in item:
+                            item['processed_refinements'] = None
+                        if 'processed_feedback' not in item:
+                            item['processed_feedback'] = None
+                
+                return data
         except (json.JSONDecodeError, FileNotFoundError):
             return []
     

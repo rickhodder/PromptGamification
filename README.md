@@ -6,10 +6,12 @@ A gamified web application to help you master AI prompt engineering through prac
 
 - **Add & Review Prompts**: Create prompts and get expert AI feedback
 - **Four AI Personas**: Choose from Beginner, Intermediate, Advanced, or Interviewer mentors
+- **Raw & Processed Feedback**: See both original AI responses and cleaned/validated versions
 - **Progress Tracking**: Dashboard with analytics and statistics
 - **Prompt Library**: Searchable knowledge base with tags and templates
 - **Goal Setting**: Track daily and weekly prompt creation targets
 - **Quality Ratings**: Six-dimensional quality assessment for each prompt
+- **Response Processing**: Automatic validation, sanitization, and enhancement of AI responses
 
 ## Tech Stack
 

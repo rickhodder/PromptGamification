@@ -185,23 +185,59 @@ def show_review_section(prompt: Prompt):
         
         # Clarifying questions
         st.markdown("### ❓ Clarifying Questions")
-        questions = review.get("questions", [])
-        for i, question in enumerate(questions):
-            st.markdown(f"{i+1}. {question}")
-            answer = st.text_input(f"Your answer", key=f"answer_{i}", placeholder="Optional...")
+        
+        # Create tabs for processed vs raw feedback
+        tab1, tab2 = st.tabs(["📝 Processed Feedback", "🔍 Raw AI Response"])
+        
+        with tab1:
+            st.markdown("##### Processed Questions")
+            questions = review.get("questions", [])
+            if questions:
+                for i, question in enumerate(questions):
+                    st.markdown(f"{i+1}. {question}")
+                    answer = st.text_input(f"Your answer", key=f"answer_{i}", placeholder="Optional...")
+            else:
+                st.info("No clarifying questions provided.")
+        
+        with tab2:
+            st.markdown("##### Raw Questions from AI")
+            raw_questions = review.get("raw_questions", [])
+            if raw_questions:
+                for i, question in enumerate(raw_questions):
+                    st.markdown(f"{i+1}. {question}")
+            else:
+                st.info("No raw questions available.")
         
         st.markdown("---")
         
         # Refinements
         st.markdown("### ✨ Suggested Refinements")
-        refinements = review.get("refinements", [])
-        selected_refinements = []
-        for i, refinement in enumerate(refinements):
-            if st.checkbox(refinement, key=f"refinement_{i}"):
-                selected_refinements.append(refinement)
         
-        if selected_refinements and st.button("Apply Selected Refinements"):
-            st.success(f"Applied {len(selected_refinements)} refinement(s)!")
+        # Create tabs for processed vs raw feedback
+        tab1, tab2 = st.tabs(["📝 Processed Feedback", "🔍 Raw AI Response"])
+        
+        with tab1:
+            st.markdown("##### Processed Refinements")
+            refinements = review.get("refinements", [])
+            selected_refinements = []
+            if refinements:
+                for i, refinement in enumerate(refinements):
+                    if st.checkbox(refinement, key=f"refinement_{i}"):
+                        selected_refinements.append(refinement)
+                
+                if selected_refinements and st.button("Apply Selected Refinements"):
+                    st.success(f"Applied {len(selected_refinements)} refinement(s)!")
+            else:
+                st.info("No refinements provided.")
+        
+        with tab2:
+            st.markdown("##### Raw Refinements from AI")
+            raw_refinements = review.get("raw_refinements", [])
+            if raw_refinements:
+                for i, refinement in enumerate(raw_refinements):
+                    st.markdown(f"{i+1}. {refinement}")
+            else:
+                st.info("No raw refinements available.")
         
         st.markdown("---")
         
@@ -235,8 +271,29 @@ def show_review_section(prompt: Prompt):
         
         # Feedback
         st.markdown("### 💬 Feedback")
-        feedback = review.get("feedback", "")
-        st.info(feedback)
+        
+        # Create tabs for processed vs raw feedback
+        tab1, tab2 = st.tabs(["📝 Processed Feedback", "🔍 Raw AI Response"])
+        
+        with tab1:
+            st.markdown("##### Processed Feedback")
+            feedback = review.get("feedback", "")
+            if feedback:
+                st.info(feedback)
+            else:
+                st.info("No processed feedback available.")
+        
+        with tab2:
+            st.markdown("##### Raw Feedback from AI")
+            raw_feedback = review.get("raw_feedback", "")
+            if raw_feedback:
+                st.info(raw_feedback)
+            else:
+                st.info("No raw feedback available.")
+            
+            # Show full raw response in expander for debugging
+            with st.expander("🔧 Debug: Full Raw Response"):
+                st.json(review)
     
     # New prompt button
     st.markdown("---")
