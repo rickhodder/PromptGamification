@@ -17,13 +17,13 @@ class TestPersonaFactory:
         """Test getting beginner persona"""
         persona = PersonaFactory.get_persona("beginner")
         assert isinstance(persona, BeginnerPersona)
-        assert persona.name == "Beginner Guide"
+        assert persona.name == "Friendly Guide"
     
     def test_get_persona_intermediate(self):
         """Test getting intermediate persona"""
         persona = PersonaFactory.get_persona("intermediate")
         assert isinstance(persona, IntermediatePersona)
-        assert persona.name == "Intermediate Coach"
+        assert persona.name == "Practical Coach"
     
     def test_get_persona_advanced(self):
         """Test getting advanced persona"""
@@ -35,7 +35,7 @@ class TestPersonaFactory:
         """Test getting interviewer persona"""
         persona = PersonaFactory.get_persona("interviewer")
         assert isinstance(persona, InterviewerPersona)
-        assert persona.name == "Interview Coach"
+        assert persona.name == "Critical Interviewer"
     
     def test_get_invalid_persona(self):
         """Test getting invalid persona raises error"""
@@ -79,7 +79,7 @@ class TestPersonas:
         prompt = persona.get_system_prompt()
         
         assert "intermediate" in prompt.lower()
-        assert "medium" in prompt.lower() or "technical" in prompt.lower()
+        assert "practical" in prompt.lower() or "technical" in prompt.lower()
     
     def test_advanced_system_prompt(self):
         """Test advanced persona system prompt"""

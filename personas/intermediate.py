@@ -7,6 +7,7 @@ from models import Prompt
 from typing import Dict
 import os
 import json
+from utils.response_processor import ResponseProcessor
 
 
 class IntermediatePersona(BasePersona):
@@ -113,9 +114,11 @@ Respond in JSON format."""
                 max_tokens=1200
             )
             
-            response["persona"] = self.name
-            response["ai_used"] = True
-            return response
+            # Process and validate response
+            processed = ResponseProcessor.process_review_response(response)
+            processed["persona"] = self.name
+            processed["ai_used"] = True
+            return processed
             
         except Exception as e:
             print(f"AI review failed: {str(e)}")
