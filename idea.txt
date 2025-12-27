@@ -1,1 +1,114 @@
+App name: Promptification
+
 Have fun exploring AI Prompt Engineering Through Gamification
+
+This app will encourage people to improve their prompting skills:
+    Weekly/Daily targets for prompts - start with 2 prompts per Daily
+    Build a knowledge base of prompts
+        Tagged for usage - will help searching - user could review past prompts - I know I had a prompt that did ... and i want to design a one-off or use it as a basis of a new prompt
+            - tagged by AI?
+            - tagged by User
+        Could tag a prompt as a template 
+    Attempt to evaluate improvement in prompting - prompts could be rated based on a set of criteria
+    Help prepare for interviews
+
+
+This will be a streamlit web application 
+The code will be written in python
+LangChain?
+Thinking that for now, data will be stored in JSON - good flexible format - in a later phase maybe move to a database/vector store
+
+
+Use Cases
+---------
+1. The user will add a new Prompt
+    User will have option as to whether they want their prompts viewed by others, or just for their list of prompts - or the user could opt in to share single or multiple prompts with others
+    There will be a field for the prompt: it should be in a large text box that is sizable
+    There will be a field for showing a suggested prompt supplied by the AI 
+    There will be a field for description: it should be in a medium text box
+    The user should not be able to run the prompt from within this application
+    There will be a field for describing what user thought went wrong - or may better "what i learned" from prompt
+    There will be a field for describing what user thought went well with prompt
+    There will be a review button that will look at the prompt and the decision
+        Knowledgeable Prompting Expert with kind, encouraging, yet cautious (aware of prompt-related security issues like prompt injections) persona,  will review the prompt and description/intent and offer
+            A list of clarifying questions to learn more about the what the user was attempting
+                The user will be able to optionally answer the questions and the prompt will be modified based on the answers
+            A list of refinements that could me made to the prompt - the user could check off each of the refinements they would like applied to the prompt and click review, and it would update the 
+
+2. Another use case would be to help a user create a prompt - using many of the same things mentioned above. 
+    Instead of entering a prompt, the user would just put a description of what they want the prompt to do.
+        for example the user would be prompted with questions/refinements
+
+3. Interviewer mode
+    not totally sure about this
+    user is interviewed on prompts
+        create a prompt that...
+        refine this prompt
+        identify issues with this prompt
+    Prompt Review
+    User is rated on answers
+
+3. Tagging a prompt as a "prompting template" will make it available in #2 above, maybe a drop down that will populate the prompt
+
+
+
+Personas
+--------
+Have several personas that can guide the users as they progress (The user could select which persona they would like to use for the review)
+    All would be kind, encouraging, yet cautious (aware of prompt-related security issues like prompt injections)
+    A beginning persona very willing to explain things simply, whose questions and refinements arent too technical
+    An intermediate persona, gives medium difficulty technical questions and explanations that the user can ask for clarification 
+    An advanced persona, gives more difficult technical questions and explanations that the user can ask for clarification
+    And finally, as a departure, a less kind/less encouraging persona that gets right to the point and is a bit of a hardass - maybe this could be an interviewer persona that would be like being in an interview to test prompting knowledge        
+
+
+Tagging
+-------
+
+One or more tags can be applied to the prompt
+Tagging is optional
+AI could suggest tags
+
+
+
+Dashboard
+---------------
+
+user
+    # of prompts over time
+    Average ratings over time
+    prompt tags breakdown    
+
+prompt
+    polar graph based on 
+        length
+        complexity
+        specificity
+        clarity
+        creativity
+        context
+
+testing
+-------
+Tests should be created for all functionality
+There should be an ability to mock the calls to AI so that tests 
+    dont drive up AI costs
+    can be run 
+
+
+
+Patterns
+--------
+strategy
+    personas as strategies that can be snapped in like tools
+any other patterns that make sense, but not just for the sake of having patterns
+
+Guidance
+--------
+Incorporate techniques from "Prompt Engineering for Generative AI" by Oreilly where relevant
+
+Parking Lot, Not sure if this will go in app
+---------------
+The user will then be able to test the prompt against different AI models
+There will be a field for tags: it should allow multiple tags to be added
+Maybe AI will rate prompts of user
