@@ -1,61 +1,90 @@
 """
-Interviewer persona - Direct, critical, interview-simulation style
+Interviewer persona - Critical, direct, challenging
 """
 
 from personas.base_persona import BasePersona
 from models import Prompt
 from typing import Dict
+import os
+import json
 
 
 class InterviewerPersona(BasePersona):
-    """Interviewer-style AI persona for job interview preparation"""
+    """Interviewer-level AI persona for interview practice"""
     
     def __init__(self):
         super().__init__()
-        self.name = "Interview Coach"
-        self.description = "Direct and critical, simulates interview pressure"
+        self.name = "Critical Interviewer"
+        self.description = "Direct, critical feedback like a tough interviewer"
+        self.use_ai = os.getenv("USE_AI_REVIEW", "false").lower() == "true"
     
     def get_system_prompt(self) -> str:
         """Return system prompt for interviewer persona"""
-        return """You are a no-nonsense AI prompt engineering interviewer.
+        return """You are a critical AI interviewer evaluating prompt engineering skills.
 
 Your role:
-- Evaluate prompts as if in a technical interview
-- Be direct and to-the-point
-- Identify weaknesses immediately
+- Be direct and honest, even if harsh
+- Point out flaws and weaknesses immediately
 - Ask tough, probing questions
-- Hold users to high standards
+- Challenge assumptions
+- Expect professional-level quality
 - Don't sugarcoat feedback
-- Focus on what's missing or wrong
-- Simulate real interview pressure
-- Still be fair and professional
+- Focus on what's wrong, then what could be better
 
 When reviewing prompts:
-- Start with what's inadequate or missing
-- Ask questions an interviewer would ask
-- Point out security vulnerabilities bluntly
-- Evaluate like you're deciding on a hire
-- Be critical but constructive
-- Expect production-ready quality
-- No hand-holding
+- Start with critical observations
+- Ask difficult follow-up questions
+- Identify all weaknesses and gaps
+- Rate strictly - don't be generous
+- Provide tough but fair feedback
+- Push candidates to defend their choices
+- Simulate real interview pressure
 
-Your tone is professional, direct, critical, and pressure-inducing."""
+Your tone is professional, direct, critical, and challenging."""
     
-    def review_prompt(self, prompt: Prompt) -> Dict[str, any]:
-        """Review prompt with interviewer-style feedback"""
+    def _build_review_prompt(self, prompt: Prompt) -> str:
+        """Build the user prompt for AI review"""
+        return f"""You are conducting a prompt engineering interview. Critically evaluate this prompt:
+
+**Candidate's Prompt:**
+{prompt.prompt_text}
+
+**Context:**
+{prompt.description or "No context provided - this is a red flag"}
+
+**Reflections:**
+{prompt.reflections or "No reflections - candidate didn't think through the problem"}
+
+**Tags:** {', '.join(prompt.tags) if prompt.tags else "None - poor organization"}
+
+Provide critical interview feedback:
+1. A significantly improved version showing what professional quality looks like
+2. 4-6 tough interview questions exposing weaknesses
+3. 6-8 critical issues that need fixing
+4. Strict ratings (1-10) - be harsh but fair
+5. Direct feedback on what's wrong and why this wouldn't pass an interview (3-4 sentences)
+
+Respond in JSON format."""
+    
+    def _get_fallback_response(self, prompt: Prompt) -> Dict[str, any]:
+        """Return fallback response when AI is disabled or fails"""
         return {
             "suggested_prompt": prompt.prompt_text,
             "questions": [
-                "Why didn't you include error handling?",
-                "How would you defend this against prompt injection?",
-                "What makes you think this prompt is production-ready?",
-                "Can you explain your design decisions?"
+                "Why didn't you include specific output format requirements?",
+                "What makes you think this prompt is clear enough?",
+                "How would you handle edge cases?",
+                "Where are your examples?",
+                "Why is there no error handling?"
             ],
             "refinements": [
-                "Add proper input validation",
-                "Include error handling",
-                "Specify expected output format clearly",
-                "Address security concerns explicitly"
+                "Add clear structure - this is basic",
+                "Include specific examples",
+                "Define output format explicitly",
+                "Handle edge cases properly",
+                "Add constraints and limitations",
+                "Use professional formatting",
+                "Think through requirements first"
             ],
             "ratings": {
                 "length": 5.0,
@@ -65,5 +94,36 @@ Your tone is professional, direct, critical, and pressure-inducing."""
                 "creativity": 5.0,
                 "context": 5.0
             },
-            "feedback": "This needs work. In an interview, I'd probe deeper on your choices."
+            "feedback": "This needs work. Add structure, examples, and think through requirements more carefully."
         }
+    
+    def review_prompt(self, prompt: Prompt) -> Dict[str, any]:
+        """Review prompt with critical interviewer feedback"""
+        
+        if not self.use_ai:
+            return self._get_fallback_response(prompt)
+        
+        try:
+            from utils.ai_service import AIServiceFactory
+            
+            ai_service = AIServiceFactory.get_service()
+            system_prompt = self.get_system_prompt()
+            user_prompt = self._build_review_prompt(prompt)
+            
+            response = ai_service.generate_review(
+                prompt_text=user_prompt,
+                system_prompt=system_prompt,
+                temperature=0.5,
+                max_tokens=1200
+            )
+            
+            response["persona"] = self.name
+            response["ai_used"] = True
+            return response
+            
+        except Exception as e:
+            print(f"AI review failed: {str(e)}")
+            fallback = self._get_fallback_response(prompt)
+            fallback["ai_used"] = False
+            fallback["error"] = str(e)
+            return fallback
