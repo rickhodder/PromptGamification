@@ -3,7 +3,7 @@ Data models for Promptification application
 Based on PRD specifications
 """
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional, Literal
 from datetime import datetime
 from uuid import uuid4
@@ -56,10 +56,9 @@ class Prompt(BaseModel):
     processed_refinements: Optional[List[str]] = None
     processed_feedback: Optional[str] = None
     
-    class Config:
-        json_encoders = {
-            datetime: lambda v: v.isoformat()
-        }
+    model_config = ConfigDict(
+        ser_json_timedelta='iso8601'
+    )
 
 
 class UserPreferences(BaseModel):
@@ -88,7 +87,6 @@ class User(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     last_active_at: datetime = Field(default_factory=datetime.now)
     
-    class Config:
-        json_encoders = {
-            datetime: lambda v: v.isoformat()
-        }
+    model_config = ConfigDict(
+        ser_json_timedelta='iso8601'
+    )
