@@ -53,7 +53,8 @@ Your tone is warm, supportive, patient, and enthusiastic about their learning jo
 {prompt.description or "No additional context provided"}
 
 **User's Reflections:**
-{prompt.reflections or "No reflections provided"}
+What I learned: {prompt.what_i_learned or "Not provided"}
+What went well: {prompt.what_went_well or "Not provided"}
 
 Please provide:
 1. A suggested improved version of the prompt

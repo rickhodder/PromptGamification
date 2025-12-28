@@ -54,7 +54,8 @@ Your tone is professional, direct, intellectually rigorous, yet supportive."""
 {prompt.description or "No description provided"}
 
 **Reflections:**
-{prompt.reflections or "No reflections provided"}
+What I learned: {prompt.what_i_learned or "Not provided"}
+What went well: {prompt.what_went_well or "Not provided"}
 
 **Tags:** {', '.join(prompt.tags) if prompt.tags else "None"}
 

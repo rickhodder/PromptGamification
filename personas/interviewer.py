@@ -54,7 +54,8 @@ Your tone is professional, direct, critical, and challenging."""
 {prompt.description or "No context provided - this is a red flag"}
 
 **Reflections:**
-{prompt.reflections or "No reflections - candidate didn't think through the problem"}
+What I learned: {prompt.what_i_learned or "Candidate didn't provide learning reflections"}
+What went well: {prompt.what_went_well or "Candidate didn't reflect on what worked"}
 
 **Tags:** {', '.join(prompt.tags) if prompt.tags else "None - poor organization"}
 

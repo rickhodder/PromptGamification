@@ -211,7 +211,7 @@ class AIServiceFactory:
     @classmethod
     def get_service(
         cls,
-        provider: AIProvider = AIProvider.OPENAI,
+        provider: Optional[AIProvider] = None,
         api_key: Optional[str] = None,
         model: Optional[str] = None
     ) -> AIService:
@@ -219,7 +219,7 @@ class AIServiceFactory:
         Get an AI service instance
         
         Args:
-            provider: AI provider to use
+            provider: AI provider to use (reads from AI_PROVIDER env var if not provided)
             api_key: Optional API key (reads from env if not provided)
             model: Optional model name
             
@@ -229,6 +229,14 @@ class AIServiceFactory:
         Raises:
             ValueError: If provider is not supported
         """
+        # Read provider from environment if not specified
+        if provider is None:
+            provider_str = os.getenv("AI_PROVIDER", "openai").lower()
+            try:
+                provider = AIProvider(provider_str)
+            except ValueError:
+                raise ValueError(f"Invalid AI_PROVIDER in .env: {provider_str}. Must be 'openai' or 'anthropic'")
+        
         if provider not in cls._services:
             raise ValueError(f"Unsupported AI provider: {provider}")
         
@@ -239,3 +247,16 @@ class AIServiceFactory:
     def list_providers(cls) -> List[str]:
         """List all registered providers"""
         return [provider.value for provider in cls._services.keys()]
+
+
+# Import service implementations to trigger registration
+# This must be at the end to avoid circular imports
+try:
+    from utils.openai_service import OpenAIService
+except ImportError:
+    pass  # OpenAI not installed
+
+try:
+    from utils.anthropic_service import AnthropicService
+except ImportError:
+    pass  # Anthropic not installed
