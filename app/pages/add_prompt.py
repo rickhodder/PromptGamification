@@ -160,6 +160,28 @@ def show_review_section(prompt: Prompt):
     if "current_review" in st.session_state:
         review = st.session_state.current_review
         
+        # Overall Feedback
+        st.markdown("### 💬 AI Feedback")
+        
+        # Create tabs for processed vs raw feedback
+        tab1, tab2 = st.tabs(["📝 Processed Feedback", "🔍 Raw AI Response"])
+        
+        with tab1:
+            feedback = review.get("feedback", "")
+            if feedback:
+                st.info(feedback)
+            else:
+                st.info("No processed feedback available.")
+        
+        with tab2:
+            raw_feedback = review.get("raw_feedback", "")
+            if raw_feedback:
+                st.info(raw_feedback)
+            else:
+                st.info("No raw feedback available.")
+        
+        st.markdown("---")
+        
         # Suggested prompt
         st.markdown("### 💡 Suggested Improvement")
         col1, col2 = st.columns(2)
