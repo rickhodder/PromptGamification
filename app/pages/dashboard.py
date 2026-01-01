@@ -101,23 +101,18 @@ def show_dashboard_page():
     if prompts_by_date:
         dates = sorted(prompts_by_date.keys())
         counts = [prompts_by_date[d] for d in dates]
-        cumulative = []
-        total = 0
-        for count in counts:
-            total += count
-            cumulative.append(total)
         
         fig = go.Figure()
         fig.add_trace(go.Scatter(
             x=dates,
-            y=cumulative,
+            y=counts,
             mode='lines+markers',
-            name='Cumulative Prompts',
+            name='Prompts Per Day',
             line=dict(color='#1f77b4', width=3)
         ))
         fig.update_layout(
             xaxis_title="Date",
-            yaxis_title="Total Prompts",
+            yaxis_title="Prompts Per Day",
             height=300,
             hovermode='x unified'
         )
